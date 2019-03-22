@@ -1,25 +1,61 @@
 'use strict'
 
-const http = require('http');
-const debug = require('debug')('nodestr:server');
 const express = require('express');
-
+const request = require('request');
 const app = express();
-const port = process.env.PORT || '8080';
-app.set('port', port);
+app.use(express.static(__dirname + '/css'));
+app.use(express.static(__dirname));
 
-const server = http.createServer(app);
-const router = express.Router();
+var bodyParser = require('body-parser');
+app.use(bodyParser.json()); // support json encoded bodies
+app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
-var route = router.get('/', (req, res, next) =>
-{
-    res.status(200).send({
-        title: "Node Storm API",
-        version: "0.0.1"
+app.set('view engine', 'pug');
+
+const server = app.listen(7000, () => {
+    console.log(`Express running → PORT ${server.address().port}`);
+});
+
+app.get('/', (req, res) => {
+    res.render('index', {
+        title: 'Paste.bin API'
     });
 });
-app.use('/', route);
 
-server.listen(port);
-console.log('API rodando na porta ' + port);
+var id = 0;
+app.post('/envia', (req, res) => {
+    console.log('Aqui vai acontecer a parte do back-end');
+    var corpo = req.body.mensagem;
+    console.log('req.body.mensagem: ' + corpo   );
 
+    var options = { method: 'POST',
+        url: 'https://pastebin.com/api/api_post.php',
+        headers:
+            {   'cache-control': 'no-cache',
+                'Content-Type': 'application/x-www-form-urlencoded' },
+        form:
+            {   api_dev_key: '1b5c850767eafcafe8c72ddbf0ff9e3b',
+                api_paste_code: corpo,
+                api_paste_private: '1',
+                api_paste_name: 'api_paste_name',
+                api_paste_expire_date: '10M',
+                api_paste_format: 'javascript',
+                api_option: 'paste',
+                undefined: undefined } };
+
+    request(options, function (error, response, body) {
+        if (error) throw new Error(error);
+        response.done;
+        console.log('O link gerado foi: ' + body);
+        console.log('res.headersSent = ' + res.headersSent);
+        console.log('res.headersSent não deu boa');
+        id = id + 1;
+        res.send('A resposta do servidor node é: ' + body + '     Sua ID é: ' + id);  // Com res.send o navegador vai para /enviar e apresenta a mensagem na passada na tela.
+
+
+    });
+
+    // res.send('Ativou o post ' + options.form.api_dev_key + '/n mensagem: ' + corpo);
+
+
+});
