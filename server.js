@@ -12,7 +12,8 @@ app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
 app.set('view engine', 'pug');
 
-const server = app.listen(7000, () => {
+const port = normalizePort(process.env.PORT || '3000');
+const server = app.listen(port, () => {
     console.log(`Express running → PORT ${server.address().port}`);
 });
 
@@ -21,6 +22,22 @@ app.get('/', (req, res) => {
         title: 'Paste.bin API'
     });
 });
+
+function normalizePort(val) {
+	const port = parseInt(val, 10);
+	if (isNaN(port)) {
+		return val;
+	}
+	
+	if (port >= 0) {
+		return port;
+	}
+	
+	return false;
+}
+
+
+
 
 var id = 0;
 app.post('/envia', (req, res) => {
