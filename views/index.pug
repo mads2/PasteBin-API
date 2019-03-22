@@ -1,0 +1,37 @@
+doctype html
+html
+    head
+        title #{title}
+        link(rel='icon', href='favicon.ico', type='image/x-icon')
+        link(rel='stylesheet', href='/css/style.css')
+        script(src='https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js')
+        script(src='../script.js')
+        meta(charset='UTF-8')
+        meta(name='viewport', content='width=device-width, initial-scale=1')
+    body
+        main
+            br
+            h2 Qual tópicos lhe interessam no momento?
+            form#formularioTwitter(action/enviaTwitter, method='POST', enctype='application/x-www-form-urlencoded')
+                .field
+                    label(for='assuntoUm') Assunto 01:
+                    textarea#assuntoUm(name='assuntoUm', rows='1', cols='17', required='')
+                .field
+                    label(for='assuntoDois') Assunto 02:
+                    textarea#assuntoDois(name='assuntoDois', rows='1', cols='17', required='')
+                .field
+                    button(type='submit') Inicia busca
+            h1(align='center') Enviar mensagem para o Pastebin
+            h3 Insira a mensagem
+            // form(action='/envia', method='POST', enctype='application/x-www-form-urlencoded')
+            form#formularioAjax(action='/envia', method='POST', enctype='application/x-www-form-urlencoded')
+                .field
+                    label(for='mensagem' ) Mensagem:
+                    textarea#mensagem(name='mensagem', rows='10', cols='34', required='')
+                    //-, readonly='readonly'
+                .field
+                    button(type='submit') Send
+            br
+            h3 O resultado é
+            #resultado .......
+            br
